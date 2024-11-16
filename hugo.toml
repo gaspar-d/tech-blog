@@ -3,7 +3,7 @@ baseURL = "https://yourdomain.com"
 defaultContentLanguage = "en"
 # language code
 languageCode = "en"
-title = "NAME_OF_YOUR_BLOG"
+title = "Blog do Gaspar"
 
 # Change the default theme to be use when building the site with Hugo
 theme = "LoveIt"
@@ -68,7 +68,7 @@ theme = "LoveIt"
         pre = "<i class='fab fa-github fa-fw'></i>"
         post = ""
         name = ""
-        url = "https://yourgithuburl"
+        url = "https://github.com/gaspar-d"
         title = "GitHub"
         weight = 5
 
@@ -97,7 +97,7 @@ theme = "LoveIt"
   #  App icon config
   [params.app]
     # optional site title override for the app when added to an iOS home screen or Android launcher
-    title = "NAME_OF_YOUR_BLOG"
+    title = "Blog do Gaspar"
     # whether to omit favicon resource links
     noFavicon = false
     # modern SVG favicon to use in place of older style .png and .ico files
@@ -142,7 +142,7 @@ theme = "LoveIt"
       # URL of the LOGO
       logo = ""
       # title name
-      name = "NAME_OF_YOUR_BLOG"
+      name = "Blog do Gaspar"
       # you can add extra information before the name (HTML format is supported), such as icons
       pre = ""
       # you can add extra information after the name (HTML format is supported), such as icons
@@ -196,9 +196,9 @@ theme = "LoveIt"
       # Gravatar Email for preferred avatar in home page
       gravatarEmail = ""
       # URL of avatar shown in home page (LINK_TO_YOUR_PHOTO_BELOW)
-      avatarURL = "https://avatars.githubusercontent.com/u/7815661?v=4"
+      avatarURL = "https://avatars.githubusercontent.com/u/52392593?v=4"
       #  title shown in home page (HTML format is supported)
-      title = "NAME_OF_YOUR_BLOG"
+      title = "Blog do Gaspar"
       # subtitle shown in home page
       subtitle = "My AWS DevOps Engineering Journey"
       # whether to use typeit animation for subtitle
@@ -219,8 +219,8 @@ theme = "LoveIt"
   # Social config about the author
   [params.social]
     Bitbucket = ""
-    GitHub = ""
-    Linkedin = "YOUR_LINKEDIN_LINK"
+    GitHub = "gaspar-d/"
+    Linkedin = "gaspar-diogo/"
     Twitter = ""
     Gitlab = ""
     Email = ""
@@ -511,7 +511,7 @@ theme = "LoveIt"
 
 # Author config
 [author]
-  name = "YOUR_NAME"
+  name = "Diogo Gaspar"
   email = ""
   link = ""
 
