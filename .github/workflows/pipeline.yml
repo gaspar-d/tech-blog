@@ -1,18 +1,48 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+name: Deploy to S3
+run-name: ${{ github.actor }} is deploying ${{ github.event_name }}
+on:
+    push:
+        branches:
+            - main # Set a branch to deploy
+    pull_request:
+
 jobs:
-    Explore-GitHub-Actions:
-        runs-on: ubuntu-latest
+    deploy:
+        runs-on: ubuntu-22.04
+        permissions:
+            id-token: write # Required for OIDC
+            contents: read # Required to read files on the repository
+
         steps:
-            - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-            - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-            - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-            - name: Check out repository code
-              uses: actions/checkout@v4
-            - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-            - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-            - name: List files in the repository
+            - uses: actions/checkout@v4
+              with:
+                  submodules: true # Fetch Hugo themes (true OR recursive)
+                  fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
+
+            - name: Setup Hugo
+              uses: peaceiris/actions-hugo@v3
+              with:
+                  hugo-version: '0.119.0'
+                  extended: true
+
+            - name: Build
+              run: hugo --minify
+
+            - name: Setup AWS credentials
+              uses: aws-actions/configure-aws-credentials@v2
+              with:
+                  role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+                  role-session-name: ${{ secrets.AWS_ROLE_SESSION_NAME }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+            - name: Deploy to S3
+              uses: jakejarvis/s3-sync-action@v0.5.1
+              with:
+                  args: --acl public-read --delete # Makes files public and removes old ones
+              env:
+                  AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }} # Your S3 bucket name
+
+            - name: Clear cloudfront cache
               run: |
-                  ls ${{ github.workspace }}
-            - run: echo "🍏 This job's status is ${{ job.status }}."
+                  set -e
+                  aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CF_DIST_ID }} --paths "/*"
