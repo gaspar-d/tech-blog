@@ -38,7 +38,7 @@ jobs:
             - name: Deploy to S3
               uses: jakejarvis/s3-sync-action@v0.5.1
               with:
-                  args: --acl public-read --delete # Makes files public and removes old ones
+                  args: --delete # Makes files public and removes old ones
               env:
                   AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }} # Your S3 bucket name
 
