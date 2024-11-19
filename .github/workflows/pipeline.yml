@@ -35,14 +35,16 @@ jobs:
                   role-session-name: ${{ secrets.AWS_ROLE_SESSION_NAME }}
                   aws-region: ${{ secrets.AWS_REGION }}
 
-            - name: Deploy to S3
-              uses: jakejarvis/s3-sync-action@v0.5.1
-              with:
-                  args: --delete # Makes files public and removes old ones
-              env:
-                  AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }} # Your S3 bucket name
+            - name: Deploy to S3 using AWS CLI
+              run: |
+                  aws s3 sync public/ s3://${{ secrets.AWS_S3_BUCKET }} --delete
+            #   uses: jakejarvis/s3-sync-action@v0.5.1
+            #   with:
+            #   args: --delete # Makes files public and removes old ones
+            #   env:
+            #   AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }} # Your S3 bucket name
 
-            - name: Clear cloudfront cache
+            - name: Clear Cloudfront cache
               run: |
                   set -e
                   aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CF_DIST_ID }} --paths "/*"
