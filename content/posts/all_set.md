@@ -1,7 +1,7 @@
 +++
 title = "We're Live! 🚀"
 date = 2024-11-20T14:30:50-03:00
-draft = true
+draft = false
 tags = ["second_post"]
 categories = ["tech", "cloud", "devops"]
 author = "Gaspar"
