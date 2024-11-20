@@ -1,8 +1,10 @@
 +++
 title = "You are a Cloud Talent! 🚀"
 date = 2024-10-07T23:45:27+02:00
-author = "Fernando Gonçalves"
+author = "Gaspar"
 draft = false
+tags = ["first_post"]
+categories = ["tech_blog"]
 +++
 
 Congratulations on starting your tech blog!
