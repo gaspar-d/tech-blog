@@ -4,23 +4,23 @@ run-name: ${{ github.actor }} is deploying ${{ github.event_name }}
 on:
     push:
         branches:
-            - main # Set a branch to deploy
+            - main
     pull_request:
 
 jobs:
     deploy:
         runs-on: ubuntu-22.04
-        
+
         permissions:
-            id-token: write # Required for OIDC
-            contents: read # Required to read files on the repository
+            id-token: write
+            contents: read
 
         steps:
             - name: Checkout Repository
               uses: actions/checkout@v4
               with:
-                  submodules: true # Fetch Hugo themes (true OR recursive)
-                  fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
+                  submodules: true
+                  fetch-depth: 0
 
             - name: Setup Hugo Instance
               uses: peaceiris/actions-hugo@v3
