@@ -1,4 +1,4 @@
-name: Deploy to S3
+name: deploy to S3
 
 run-name: ${{ github.actor }} is deploying ${{ github.event_name }}
 on:
@@ -8,42 +8,51 @@ on:
     pull_request:
 
 jobs:
+    build: 
+        runs-on: ubuntu-22.04
+        steps:
+          - name: Checkout Repository
+            uses: actions/checkout@v4
+            with:
+                submodules: true
+                fetch-depth: 0
+
+          - name: Setup Hugo Instance
+            uses: peaceiris/actions-hugo@v3
+            with:
+                hugo-version: '0.119.0'
+                extended: true
+
+          - name: Build Project Files
+            run: hugo --minify
+
+          - name: Upload Build Artifacts
+            uses: actions/upload-artifact@v3
+            with:
+                name: hugo-build
+                path: public/
+ 
     deploy:
         runs-on: ubuntu-22.04
-
+        needs: build
         permissions:
             id-token: write
             contents: read
 
         steps:
-            - name: Checkout Repository
-              uses: actions/checkout@v4
-              with:
-                  submodules: true
-                  fetch-depth: 0
+          - name: Setup AWS credentials
+            uses: aws-actions/configure-aws-credentials@v4
+            with:
+              role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+              role-session-name: ${{ secrets.AWS_ROLE_SESSION_NAME }}
+              aws-region: ${{ secrets.AWS_REGION }}
 
-            - name: Setup Hugo Instance
-              uses: peaceiris/actions-hugo@v3
-              with:
-                  hugo-version: '0.119.0'
-                  extended: true
+          - name: Deploy to S3 using AWS CLI
+            run: aws s3 sync public/ s3://${{ secrets.AWS_S3_BUCKET }} --delete
 
-            - name: Build Project Files
-              run: hugo --minify
-
-            - name: Setup AWS credentials
-              uses: aws-actions/configure-aws-credentials@v4
-              with:
-                  role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-                  role-session-name: ${{ secrets.AWS_ROLE_SESSION_NAME }}
-                  aws-region: ${{ secrets.AWS_REGION }}
-
-            - name: Deploy to S3 using AWS CLI
-              run: aws s3 sync public/ s3://${{ secrets.AWS_S3_BUCKET }} --delete
-
-            - name: Clear Cloudfront cache invalidation
-              run: |
-                  set -e
-                  aws cloudfront create-invalidation \
-                    --distribution-id ${{ secrets.AWS_CF_DIST_ID }} \
-                    --paths "/*"
+          - name: Clear Cloudfront cache invalidation
+            run: |
+              set -e
+              aws cloudfront create-invalidation \
+                --distribution-id ${{ secrets.AWS_CF_DIST_ID }} \
+                --paths "/*"
