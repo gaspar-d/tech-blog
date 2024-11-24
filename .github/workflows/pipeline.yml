@@ -56,7 +56,7 @@ jobs:
               aws-region: ${{ secrets.AWS_REGION }}
 
           - name: Deploy to S3 using AWS CLI
-            run: aws s3 sync hugo-build/ s3://${{ secrets.AWS_S3_BUCKET }} --delete
+            run: aws s3 sync ./ s3://${{ secrets.AWS_S3_BUCKET }} --delete
 
           - name: Clear Cloudfront cache invalidation
             run: |
