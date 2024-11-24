@@ -8,8 +8,12 @@ on:
     pull_request:
 
 jobs:
-    build: 
+    # build: 
+      deploy:
         runs-on: ubuntu-22.04
+        permissions:
+          id-token: write
+          contents: read
         steps:
           - name: Checkout Repository
             uses: actions/checkout@v4
@@ -32,14 +36,6 @@ jobs:
                 name: hugo-build
                 path: public/
  
-    deploy:
-        runs-on: ubuntu-22.04
-        needs: build
-        permissions:
-            id-token: write
-            contents: read
-
-        steps:
           - name: Download Build Artifacts
             uses: actions/download-artifact@v3
             with:
