@@ -46,7 +46,7 @@ jobs:
               name: hugo-build
 
           - name: List Downloaded Files
-            run: ls -R hugo-build/
+            run: ls -l 
 
           - name: Setup AWS credentials
             uses: aws-actions/configure-aws-credentials@v4
